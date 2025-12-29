@@ -327,15 +327,20 @@
         } else {
             // ★★★ここにFirebaseの設定を貼り付けてください（外部公開用）★★★
             // Firebaseコンソール > プロジェクトの設定 > 全般 > マイアプリ で取得したコードの中身
-            firebaseConfig = {
-                apiKey: "AIzaSyCtcrcIUkcUGKycL656uAZMgy8Cysz6Cgw",
-                 authDomain: "geo-pot-8b9c7.firebaseapp.com",
-                 projectId: "geo-pot-8b9c7",
-                 storageBucket: "geo-pot-8b9c7.firebasestorage.app",
-                 messagingSenderId: "495377899604",
-                 appId: "1:495377899604:web:6e48f00e5e69600fe7cdc1"
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "firebase/app";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+            
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyCtcrcIUkcUGKycL656uAZMgy8Cysz6Cgw",
+              authDomain: "geo-pot-8b9c7.firebaseapp.com",
+              projectId: "geo-pot-8b9c7",
+              storageBucket: "geo-pot-8b9c7.firebasestorage.app",
+              messagingSenderId: "495377899604",
+              appId: "1:495377899604:web:6e48f00e5e69600fe7cdc1"
             };
-            appId = firebaseConfig.projectId;
         }
 
         const app = initializeApp(firebaseConfig);
