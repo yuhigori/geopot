@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO-POT | 日常に、洗練された「緑」のアートを。</title>
+    <meta name="description" content="幾何学デザインと環境素材が織りなす、新しいインテリアプランター。">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Shippori Mincho (Serif for headings) & Noto Sans JP (Sans for body) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #fafaf9; /* Stone-50 */
+            color: #44403c; /* Stone-700 */
+        }
+        h1, h2, h3, h4, .serif {
+            font-family: 'Shippori Mincho', serif;
+        }
+        
+        /* カスタムカラー設定 */
+        .text-accent { color: #57534e; } /* Stone-600 */
+        .bg-primary { background-color: #44403c; } /* Stone-700 */
+        .bg-primary:hover { background-color: #292524; } /* Stone-800 */
+        
+        /* 繊細なフェードインアニメーション */
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 画像のホバーエフェクト */
+        .img-zoom-container { overflow: hidden; }
+        .img-zoom { transition: transform 0.6s ease; }
+        .group:hover .img-zoom { transform: scale(1.05); }
+
+        /* ローディングスピナー */
+        .loader {
+            border-top-color: #78716c;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-stone-200 selection:text-stone-800">
+
+    <!-- Header -->
+    <header class="fixed w-full bg-[#fafaf9]/90 backdrop-blur-sm z-50 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0">
+                    <span class="serif font-bold text-2xl tracking-widest text-stone-800">GEO-POT</span>
+                </div>
+                <nav class="hidden md:flex space-x-10 text-sm tracking-widest uppercase text-stone-500">
+                    <a href="#about" class="hover:text-stone-800 transition duration-300">About</a>
+                    <a href="#products" class="hover:text-stone-800 transition duration-300">Collection</a>
+                    <a href="#spec" class="hover:text-stone-800 transition duration-300">Spec</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Text Content -->
+                <div class="text-center lg:text-left fade-in-up" style="animation-delay: 0.1s;">
+                    <span class="block text-stone-500 tracking-[0.2em] text-sm mb-4 uppercase">Interior Green Design</span>
+                    <h1 class="serif text-4xl sm:text-5xl lg:text-6xl font-medium tracking-wide text-stone-800 mb-8 leading-tight">
+                        植物と暮らす、<br>
+                        <span class="italic text-stone-600">美しい</span>シルエット。
+                    </h1>
+                    <p class="text-stone-500 mb-10 max-w-md mx-auto lg:mx-0 leading-relaxed font-light">
+                        光と影が織りなす幾何学の造形美。<br>
+                        環境に優しい素材でつくられたプランターが、<br>
+                        あなたのお部屋を洗練された空間へと変えます。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+                        <a href="#products" class="inline-flex items-center justify-center px-10 py-4 border border-transparent text-sm tracking-widest uppercase text-white bg-primary transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 rounded-full">
+                            View Collection
+                        </a>
+                        <a href="#about" class="inline-flex items-center justify-center px-10 py-4 border border-stone-300 text-sm tracking-widest uppercase text-stone-600 bg-transparent hover:bg-stone-100 transition rounded-full">
+                            Read Story
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="relative fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="absolute -top-10 -right-10 w-64 h-64 bg-[#e7e5e4] rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse"></div>
+                    <div class="relative aspect-[4/5] md:aspect-square overflow-hidden rounded-[2rem] shadow-2xl">
+                        <!-- Chic Interior Image -->
+                        <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80&w=1000" alt="幾何学デザインのプランター" class="w-full h-full object-cover transform scale-105 hover:scale-100 transition duration-[2s]">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About / Features Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-20 fade-in-up">
+                <h2 class="serif text-3xl md:text-4xl text-stone-800 mb-4">Philosophy</h2>
+                <div class="w-12 h-px bg-stone-300 mx-auto"></div>
+                <p class="mt-6 text-stone-500 font-light">機能性と美意識の融合</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <!-- Feature 1 -->
+                <div class="flex flex-col items-center text-center group fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="w-full h-64 overflow-hidden rounded-xl mb-8 relative">
+                         <img src="https://images.unsplash.com/photo-1596489392231-52709e376043?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-700" alt="Design">
+                         <div class="absolute inset-0 flex items-center justify-center bg-black/10">
+                             <span class="text-white border border-white/50 px-6 py-2 backdrop-blur-sm rounded-full serif tracking-widest">DESIGN</span>
+                         </div>
+                    </div>
+                    <h3 class="serif text-xl font-medium text-stone-800 mb-4">光を纏う幾何学デザイン</h3>
+                    <p class="text-stone-500 leading-relaxed font-light text-sm max-w-sm">
+                        3Dプリンターならではの積層技術が可能にした、繊細な多面体構造。窓辺に置くだけで、刻々と変わる光の陰影をお楽しみいただけます。
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="flex flex-col items-center text-center group fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="w-full h-64 overflow-hidden rounded-xl mb-8 relative">
+                        <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb7d5763?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-700" alt="Eco">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/10">
+                             <span class="text-white border border-white/50 px-6 py-2 backdrop-blur-sm rounded-full serif tracking-widest">MATERIAL</span>
+                         </div>
+                    </div>
+                    <h3 class="serif text-xl font-medium text-stone-800 mb-4">土に還る、優しい素材</h3>
+                    <p class="text-stone-500 leading-relaxed font-light text-sm max-w-sm">
+                        素材には植物由来のバイオプラスチック（PLA）を使用。石油製品とは違う、マットで温かみのある質感が、植物の緑をより一層引き立てます。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Collection (Dynamic from Firestore) -->
+    <section id="products" class="py-24 bg-[#fafaf9]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 fade-in-up">
+                <div>
+                    <h2 class="serif text-3xl md:text-4xl text-stone-800 mb-2">Collection</h2>
+                    <p class="text-stone-500 font-light text-sm">あなたらしいスタイルを。</p>
+                </div>
+                <!-- Optional Filter Buttons could go here -->
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-spinner" class="flex justify-center py-20">
+                <div class="flex flex-col items-center">
+                    <div class="loader ease-linear rounded-full border-2 border-t-2 border-stone-300 h-10 w-10 mb-4"></div>
+                    <p class="text-xs text-stone-400 font-light tracking-widest">Loading Collection...</p>
+                </div>
+            </div>
+
+            <!-- Grid Container -->
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+                <!-- Products will be injected here by JS -->
+            </div>
+            
+            <p class="text-center text-stone-400 text-xs mt-16 font-light">
+                Secure payment via Stripe &copy;
+            </p>
+        </div>
+    </section>
+
+    <!-- Spec / Details -->
+    <section id="spec" class="py-24 bg-white border-t border-stone-100">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="serif text-2xl text-center text-stone-800 mb-12">Product Specification</h2>
+            
+            <div class="bg-[#fafaf9] rounded-2xl p-8 md:p-12">
+                <dl class="space-y-6 text-sm">
+                    <div class="grid grid-cols-3 gap-4 border-b border-stone-200 pb-4">
+                        <dt class="font-medium text-stone-800 uppercase tracking-wider">Material</dt>
+                        <dd class="col-span-2 text-stone-500">PLA樹脂（ポリ乳酸 / 植物由来バイオプラスチック）</dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 border-b border-stone-200 pb-4">
+                        <dt class="font-medium text-stone-800 uppercase tracking-wider">Heat resist</dt>
+                        <dd class="col-span-2 text-stone-500">約50℃ <span class="text-xs block mt-1 text-stone-400">※真夏の直射日光下や車内など、高温になる場所は避けてください。</span></dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 border-b border-stone-200 pb-4">
+                        <dt class="font-medium text-stone-800 uppercase tracking-wider">Origin</dt>
+                        <dd class="col-span-2 text-stone-500">Made in Japan (Handmade / 3D Print)</dd>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <dt class="font-medium text-stone-800 uppercase tracking-wider">Note</dt>
+                        <dd class="col-span-2 text-stone-500">3Dプリンター特有の積層痕（細かい横縞）がございますが、製造上の仕様であり製品の味わいとしてお楽しみください。</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tokushoho (Accordion Style for Cleanliness) -->
+    <section class="py-12 bg-white text-stone-400 text-xs">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <details class="cursor-pointer group">
+                <summary class="list-none hover:text-stone-600 transition underline underline-offset-4">特定商取引法に基づく表記を表示</summary>
+                <div class="mt-8 text-left border border-stone-100 p-6 rounded-lg bg-[#fafaf9]">
+                    <div class="grid grid-cols-1 gap-y-2">
+                        <p><span class="font-bold mr-2">販売業者:</span> GEO-POT Design Lab.</p>
+                        <p><span class="font-bold mr-2">運営責任者:</span> 山田 太郎</p>
+                        <p><span class="font-bold mr-2">所在地:</span> 〒000-0000 東京都〇〇区〇〇 1-2-3</p>
+                        <p><span class="font-bold mr-2">連絡先:</span> support@example.com / 03-0000-0000</p>
+                        <p><span class="font-bold mr-2">支払方法:</span> クレジットカード決済（Stripe）</p>
+                        <p><span class="font-bold mr-2">返品について:</span> 初期不良のみ到着後7日以内対応</p>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#292524] text-[#a8a29e] py-16">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center">
+            <span class="serif text-2xl text-white tracking-widest mb-6">GEO-POT</span>
+            
+            <div class="flex space-x-8 mb-8">
+                <a href="#" class="hover:text-white transition transform hover:scale-110"><i class="fa-brands fa-instagram text-xl"></i></a>
+                <a href="#" class="hover:text-white transition transform hover:scale-110"><i class="fa-brands fa-twitter text-xl"></i></a>
+                <a href="#" class="hover:text-white transition transform hover:scale-110"><i class="fa-brands fa-pinterest text-xl"></i></a>
+            </div>
+
+            <p class="text-xs font-light tracking-wide mb-8">&copy; 2024 GEO-POT Design Lab. All rights reserved.</p>
+
+            <!-- Admin Login Link (Subtle) -->
+            <div class="border-t border-[#3d3836] pt-8 w-full max-w-xs text-center">
+                <a href="admin.html" class="text-[10px] text-[#57534e] hover:text-stone-400 transition tracking-widest uppercase flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock text-[8px]"></i> Admin Login
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="product-modal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-[#292524]/60 backdrop-blur-sm transition-opacity opacity-0" id="modal-backdrop"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                
+                <!-- Panel -->
+                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" id="modal-panel">
+                    
+                    <button type="button" class="absolute right-4 top-4 z-10 p-2 text-stone-400 hover:text-stone-600 transition bg-white/50 rounded-full" onclick="closeModal()">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Image -->
+                        <div class="bg-stone-100 h-64 md:h-auto relative">
+                            <img id="modal-img" src="" alt="" class="absolute inset-0 h-full w-full object-cover">
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-8 md:p-12 flex flex-col justify-center">
+                            <span id="modal-badge" class="self-start inline-block px-3 py-1 mb-4 text-xs font-medium tracking-widest uppercase text-stone-500 bg-stone-100 rounded-full hidden">
+                                Best Seller
+                            </span>
+                            
+                            <h2 id="modal-title" class="serif text-3xl text-stone-800 mb-2"></h2>
+                            <p id="modal-price" class="text-xl font-medium text-stone-600 mb-6 font-sans"></p>
+
+                            <div class="prose prose-stone prose-sm mb-8">
+                                <p id="modal-desc" class="text-stone-500 font-light leading-relaxed"></p>
+                            </div>
+
+                            <div class="bg-[#fafaf9] rounded-lg p-6 mb-8">
+                                <h4 class="font-bold text-stone-800 text-xs uppercase tracking-widest mb-4">Specifications</h4>
+                                <div class="space-y-2 text-sm text-stone-600">
+                                    <div class="flex justify-between"><span class="text-stone-400">Size</span> <span id="modal-spec-size" class="font-medium"></span></div>
+                                    <div class="flex justify-between"><span class="text-stone-400">Weight</span> <span id="modal-spec-weight" class="font-medium"></span></div>
+                                    <div class="flex justify-between"><span class="text-stone-400">Pot Size</span> <span id="modal-spec-rec" class="font-medium"></span></div>
+                                </div>
+                            </div>
+
+                            <a id="modal-buy-btn" href="#" target="_blank" class="w-full block text-center bg-[#44403c] hover:bg-[#292524] text-white font-medium py-4 px-6 rounded-full shadow-lg transition transform hover:-translate-y-0.5 tracking-widest text-sm uppercase">
+                                Purchase on Stripe
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase & Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Config Logic for Canvas vs Production
+        let firebaseConfig;
+        let appId;
+
+        if (typeof __firebase_config !== 'undefined') {
+            // 現在のプレビュー環境用（このまま触らないでください）
+            firebaseConfig = JSON.parse(__firebase_config);
+            appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        } else {
+            // ★★★ここにFirebaseの設定を貼り付けてください（外部公開用）★★★
+            // Firebaseコンソール > プロジェクトの設定 > 全般 > マイアプリ で取得したコードの中身
+            firebaseConfig = {
+                apiKey: "AIzaSyCtcrcIUkcUGKycL656uAZMgy8Cysz6Cgw",
+                 authDomain: "geo-pot-8b9c7.firebaseapp.com",
+                 projectId: "geo-pot-8b9c7",
+                 storageBucket: "geo-pot-8b9c7.firebasestorage.app",
+                 messagingSenderId: "495377899604",
+                 appId: "1:495377899604:web:6e48f00e5e69600fe7cdc1"
+            };
+            appId = firebaseConfig.projectId;
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // パス設定: プレビュー環境と本番環境で切り替え
+        function getCollectionRef() {
+            if (typeof __firebase_config !== 'undefined') {
+                 return collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            } else {
+                 return collection(db, 'products');
+            }
+        }
+
+        // Global store for products
+        let productsData = [];
+
+        // --- Seed Data (Run if empty) ---
+        async function seedDatabase() {
+            console.log("Seeding database with dummy data...");
+            const dummyProducts = [
+                {
+                    id: 'standard-white',
+                    title: "GEO-POT Standard (White)",
+                    price: "¥3,500",
+                    desc: "シリーズの原点となるスタンダードモデル。正二十面体をベースにした幾何学デザインは、見る角度によって様々な表情を見せます。デスク周りやリビングのアクセントに最適なサイズ感です。",
+                    image: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80&w=800",
+                    badge: "Best Seller",
+                    specs: { size: "H120mm x W130mm", weight: "約150g", rec: "3号ポット (9cm)" },
+                    link: "https://stripe.com/jp",
+                    createdAt: serverTimestamp()
+                },
+                {
+                    id: 'tall-gray',
+                    title: "GEO-POT Tall (Stone)",
+                    price: "¥4,200",
+                    desc: "縦のラインを強調したトールモデル。背の高いサボテンや、垂れ下がる植物（アイビーなど）との相性が抜群です。スマートなシルエットで場所を取りません。",
+                    image: "https://images.unsplash.com/photo-1525498128493-380d1990a112?auto=format&fit=crop&q=80&w=800",
+                    badge: null,
+                    specs: { size: "H160mm x W110mm", weight: "約180g", rec: "3号〜3.5号ポット" },
+                    link: "https://stripe.com/jp",
+                    createdAt: serverTimestamp()
+                },
+                {
+                    id: 'hanging-beige',
+                    title: "GEO-POT Hanging",
+                    price: "¥3,800",
+                    desc: "空間を有効活用できるハンギングモデル。3Dプリンターならではの軽量設計により、吊り下げても安心です。窓辺に飾れば、光の透過と影の美しさを最大限に楽しめます。",
+                    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=800",
+                    badge: "New Arrival",
+                    specs: { size: "H110mm x W120mm", weight: "約120g (紐含まず)", rec: "3号ポット (エアプランツ等)" },
+                    link: "https://stripe.com/jp",
+                    createdAt: serverTimestamp()
+                }
+            ];
+
+            const colRef = getCollectionRef();
+            
+            for (const p of dummyProducts) {
+                try {
+                    await addDoc(colRef, p);
+                } catch(e) {
+                    console.error("Seed error:", e);
+                }
+            }
+        }
+
+        // Main Fetch Function
+        async function initStore() {
+            try {
+                // Auth
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                     await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                     await signInAnonymously(auth);
+                }
+
+                const colRef = getCollectionRef();
+                let q = query(colRef, orderBy('createdAt', 'desc')); 
+                let snapshot = await getDocs(q);
+
+                // --- Auto Seed Check ---
+                if (snapshot.empty) {
+                    await seedDatabase();
+                    // Re-fetch after seeding
+                    q = query(colRef, orderBy('createdAt', 'desc'));
+                    snapshot = await getDocs(q);
+                }
+
+                const grid = document.getElementById('product-grid');
+                const loader = document.getElementById('loading-spinner');
+                
+                loader.classList.add('hidden');
+
+                if (snapshot.empty) {
+                    grid.innerHTML = '<div class="col-span-full text-center py-10 text-stone-400 font-light">商品データの読み込みに失敗しました。</div>';
+                    return;
+                }
+
+                productsData = []; // Reset
+                grid.innerHTML = ''; // Clear
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const product = { docId: doc.id, ...data };
+                    productsData.push(product);
+                    grid.appendChild(createProductCard(product));
+                });
+
+            } catch (error) {
+                console.error("Error loading products:", error);
+                document.getElementById('loading-spinner').innerHTML = '<p class="text-red-400 text-sm">読み込みに失敗しました。再読み込みしてください。</p>';
+            }
+        }
+
+        // Generate HTML for a Card
+        function createProductCard(product) {
+            const div = document.createElement('div');
+            // Animation classes
+            div.className = "group cursor-pointer fade-in-up";
+            
+            // Badge Logic
+            const badgeHtml = product.badge 
+                ? `<span class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur text-[#44403c] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">${product.badge}</span>` 
+                : '';
+
+            div.innerHTML = `
+                <div class="relative overflow-hidden aspect-[4/5] bg-stone-100 rounded-xl mb-6 shadow-sm group-hover:shadow-md transition duration-300">
+                    ${badgeHtml}
+                    <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover img-zoom">
+                    
+                    <!-- Quick View Overlay -->
+                    <div class="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover:opacity-100 transition duration-300 flex justify-center pb-6 bg-gradient-to-t from-black/20 to-transparent">
+                        <button class="bg-white text-stone-800 text-xs font-medium px-6 py-3 rounded-full shadow-lg hover:bg-stone-50 transition uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 duration-300 js-view-btn">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <h3 class="serif text-lg text-stone-800 mb-1 group-hover:text-[#8c8680] transition">${product.title}</h3>
+                    <p class="text-stone-500 text-sm font-light">${product.price}</p>
+                </div>
+            `;
+
+            // Add click event for modal
+            div.addEventListener('click', () => openModal(product));
+            return div;
+        }
+
+        // Initialize
+        initStore();
+
+        // Export Modal Functions to global scope
+        window.productsData = productsData;
+    </script>
+
+    <!-- Modal Logic (Vanilla JS) -->
+    <script>
+        const modal = document.getElementById('product-modal');
+        const modalPanel = document.getElementById('modal-panel');
+        const backdrop = document.getElementById('modal-backdrop');
+
+        function openModal(product) {
+            // Populate
+            document.getElementById('modal-title').textContent = product.title;
+            document.getElementById('modal-price').textContent = product.price;
+            document.getElementById('modal-desc').textContent = product.desc;
+            document.getElementById('modal-img').src = product.image;
+            document.getElementById('modal-buy-btn').href = product.link;
+
+            // Specs
+            if (product.specs) {
+                document.getElementById('modal-spec-size').textContent = product.specs.size || '-';
+                document.getElementById('modal-spec-weight').textContent = product.specs.weight || '-';
+                document.getElementById('modal-spec-rec').textContent = product.specs.rec || '-';
+            }
+
+            // Badge
+            const badgeEl = document.getElementById('modal-badge');
+            if (product.badge) {
+                badgeEl.textContent = product.badge;
+                badgeEl.classList.remove('hidden');
+            } else {
+                badgeEl.classList.add('hidden');
+            }
+
+            // Show
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                modalPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+                modalPanel.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            // Revert Transition
+            backdrop.classList.add('opacity-0');
+            modalPanel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+            modalPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300); // Duration matches CSS transition roughly
+        }
+
+        // Close on background click
+        window.onclick = function(event) {
+            if (event.target == backdrop || event.target.closest('#modal-backdrop')) {
+                closeModal();
+            }
+        }
+        
+        // Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
