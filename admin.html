@@ -227,10 +227,41 @@
             appId = firebaseConfig.projectId;
         }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+        // Firebase設定の検証
+        if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+            console.error("❌ Firebase設定が不完全です:", firebaseConfig);
+            alert("Firebase設定エラー: 必須の設定項目が不足しています。\napiKey, authDomain, projectIdを確認してください。");
+            throw new Error("Firebase設定が不完全です");
+        }
+
+        console.log("🔧 Firebase設定を確認:", {
+            apiKey: firebaseConfig.apiKey ? "設定済み" : "未設定",
+            authDomain: firebaseConfig.authDomain ? "設定済み" : "未設定",
+            projectId: firebaseConfig.projectId ? "設定済み" : "未設定",
+        });
+
+        let app;
+        let auth;
+        let db;
+        let storage;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            console.log("✅ Firebaseアプリが初期化されました");
+            
+            auth = getAuth(app);
+            console.log("✅ Firebase Authが初期化されました");
+            
+            db = getFirestore(app);
+            console.log("✅ Firestoreが初期化されました");
+            
+            storage = getStorage(app);
+            console.log("✅ Firebase Storageが初期化されました");
+        } catch (error) {
+            console.error("❌ Firebaseの初期化に失敗しました:", error);
+            alert("Firebase初期化エラー: " + error.message);
+            throw error;
+        }
 
         // Path Selection
         function getCollectionRef() {
@@ -245,16 +276,41 @@
 
         // Auth Logic
         async function initAuth() {
+            if (!auth) {
+                console.error("❌ Firebase Authが初期化されていません");
+                alert("Firebase Auth初期化エラー: Authが利用できません");
+                return;
+            }
+
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    console.log("🔐 カスタムトークンでログインを試みます...");
                     await signInWithCustomToken(auth, __initial_auth_token);
+                    console.log("✅ カスタムトークンでログイン成功");
                 } else {
+                    console.log("🔐 匿名認証でログインを試みます...");
                     await signInAnonymously(auth);
+                    console.log("✅ 匿名認証でログイン成功");
                 }
             } catch (e) {
-                console.error("Auth Error:", e);
-                // Production environment error alert
-                if (typeof __firebase_config === 'undefined') alert("Firebase接続エラー: 設定を確認してください\n" + e.message);
+                console.error("❌ Auth Error:", e);
+                console.error("エラーコード:", e.code);
+                console.error("エラーメッセージ:", e.message);
+                
+                // より詳細なエラーメッセージ
+                let errorMessage = "Firebase接続エラー: 設定を確認してください\n";
+                errorMessage += "エラー: " + e.message + "\n";
+                
+                if (e.code === 'auth/configuration-not-found') {
+                    errorMessage += "\n【解決方法】\n";
+                    errorMessage += "1. Firebase Consoleで匿名認証が有効になっているか確認してください\n";
+                    errorMessage += "2. Firebase Console > Authentication > Sign-in method > Anonymous を有効にしてください\n";
+                    errorMessage += "3. ブラウザのキャッシュをクリアして再読み込みしてください";
+                }
+                
+                if (typeof __firebase_config === 'undefined') {
+                    alert(errorMessage);
+                }
             }
         }
         
