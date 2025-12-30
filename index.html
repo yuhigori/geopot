@@ -297,8 +297,8 @@
             firebaseConfig = JSON.parse(__firebase_config);
             appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         } else {
-            // 外部公開用設定
-            // 修正: const を削除しました。これで正しく読み込まれます。
+            // ★★★ Firebase設定（外部公開用） ★★★
+            // 提供された設定を埋め込みました
             firebaseConfig = {
                 apiKey: "AIzaSyCtcrcIUkcUGKycL656uAZMgy8Cysz6Cgw",
                 authDomain: "geo-pot-8b9c7.firebaseapp.com",
@@ -389,8 +389,10 @@
                 let q = query(colRef, orderBy('createdAt', 'desc')); 
                 let snapshot = await getDocs(q);
 
+                // --- Auto Seed Check ---
                 if (snapshot.empty) {
                     await seedDatabase();
+                    // Re-fetch after seeding
                     q = query(colRef, orderBy('createdAt', 'desc'));
                     snapshot = await getDocs(q);
                 }
@@ -405,8 +407,8 @@
                     return;
                 }
 
-                productsData = []; 
-                grid.innerHTML = ''; 
+                productsData = []; // Reset
+                grid.innerHTML = ''; // Clear
 
                 snapshot.forEach(doc => {
                     const data = doc.data();
@@ -465,6 +467,7 @@
         const backdrop = document.getElementById('modal-backdrop');
 
         function openModal(product) {
+            // Populate
             document.getElementById('modal-title').textContent = product.title;
             document.getElementById('modal-price').textContent = product.price;
             document.getElementById('modal-desc').textContent = product.desc;
@@ -486,12 +489,14 @@
                 linkBtn.href = product.link || '#';
             }
 
+            // Specs
             if (product.specs) {
                 document.getElementById('modal-spec-size').textContent = product.specs.size || '-';
                 document.getElementById('modal-spec-weight').textContent = product.specs.weight || '-';
                 document.getElementById('modal-spec-rec').textContent = product.specs.rec || '-';
             }
 
+            // Badge
             const badgeEl = document.getElementById('modal-badge');
             if (product.badge) {
                 badgeEl.textContent = product.badge;
@@ -500,7 +505,9 @@
                 badgeEl.classList.add('hidden');
             }
 
+            // Show
             modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
             setTimeout(() => {
                 backdrop.classList.remove('opacity-0');
                 modalPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
@@ -511,6 +518,7 @@
         }
 
         function closeModal() {
+            // Revert Transition
             backdrop.classList.add('opacity-0');
             modalPanel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
             modalPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
@@ -518,15 +526,17 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 document.body.style.overflow = '';
-            }, 300);
+            }, 300); // Duration matches CSS transition roughly
         }
 
+        // Close on background click
         window.onclick = function(event) {
             if (event.target == backdrop || event.target.closest('#modal-backdrop')) {
                 closeModal();
             }
         }
         
+        // Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === "Escape" && !modal.classList.contains('hidden')) {
                 closeModal();

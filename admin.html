@@ -211,12 +211,12 @@
         let appId;
 
         if (typeof __firebase_config !== 'undefined') {
-            // 現在のプレビュー環境用
+            // 現在のプレビュー環境用（このまま触らないでください）
             firebaseConfig = JSON.parse(__firebase_config);
             appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         } else {
-            // 外部公開用設定
-            // 修正: const を削除しました。これで正しく読み込まれます。
+            // ★★★ Firebase設定（外部公開用） ★★★
+            // 提供された設定を埋め込みました
             firebaseConfig = {
                 apiKey: "AIzaSyCtcrcIUkcUGKycL656uAZMgy8Cysz6Cgw",
                 authDomain: "geo-pot-8b9c7.firebaseapp.com",
@@ -225,7 +225,6 @@
                 messagingSenderId: "495377899604",
                 appId: "1:495377899604:web:6e48f00e5e69600fe7cdc1"
             };
-            // 外部環境ではprojectIdなどをappIdとして扱う、もしくは単純なパスを使う
             appId = firebaseConfig.projectId;
         }
 
@@ -237,10 +236,8 @@
         // パス設定: プレビュー環境と本番環境で切り替え
         function getCollectionRef() {
             if (typeof __firebase_config !== 'undefined') {
-                // プレビュー環境 (Canvas)
                 return collection(db, 'artifacts', appId, 'public', 'data', 'products');
             } else {
-                // 本番環境 (External)
                 return collection(db, 'products');
             }
         }
@@ -257,6 +254,7 @@
                 }
             } catch (e) {
                 console.error("Auth Error:", e);
+                // プレビュー環境でない場合はアラートを出す
                 if (typeof __firebase_config === 'undefined') alert("Firebase接続エラー: 設定を確認してください");
             }
         }
