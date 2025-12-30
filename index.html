@@ -403,10 +403,9 @@
             firebaseConfig = JSON.parse(__firebase_config);
             appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         } else {
-            // ★★★ここにFirebaseの設定を貼り付けてください（外部公開用）★★★
-            // Firebaseコンソール > プロジェクトの設定 > 全般 > マイアプリ で取得したコードの中身
-            // TODO: Add SDKs for Firebase products that you want to use
-            // https://firebase.google.com/docs/web/setup#available-libraries
+            // Firebase Config (Production)
+            // Note: Imports are already handled at the top of this file via CDN.
+            // Using the configuration provided by the user below:
 
             // Your web app's Firebase configuration
             firebaseConfig = {
