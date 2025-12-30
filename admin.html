@@ -215,8 +215,7 @@
             firebaseConfig = JSON.parse(__firebase_config);
             appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         } else {
-            // Production Env
-            // ★修正: const を削除しました。これで正しく初期化されます。
+            // Production Env - ここにいただいた設定を反映し、constを削除しました
             firebaseConfig = {
                 apiKey: "AIzaSyCtcrcIUkcUGKycL656uAZMgy8Cysz6Cgw",
                 authDomain: "geo-pot-8b9c7.firebaseapp.com",
@@ -271,7 +270,6 @@
         const addProduct = async (e) => {
             e.preventDefault();
             if (!currentUser) {
-                // Try waiting a bit if auth is slow
                 await new Promise(r => setTimeout(r, 1000));
                 if (!currentUser) return alert("認証エラー: ログインしていません。ページを再読み込みしてください。");
             }
