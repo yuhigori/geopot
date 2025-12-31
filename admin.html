@@ -235,7 +235,7 @@
         }
 
         console.log("🔧 Firebase設定を確認:", {
-            apiKey: firebaseConfig.apiKey ? "設定済み" : "未設定",
+            apiKey: firebaseConfig.apiKey ? "設定済み" : "未設定",ß
             authDomain: firebaseConfig.authDomain ? "設定済み" : "未設定",
             projectId: firebaseConfig.projectId ? "設定済み" : "未設定",
         });
@@ -336,7 +336,7 @@
 
             const formData = new FormData(e.target);
             const stripeCode = formData.get('stripe_code');
-            let imageUrl = formData.get('image');
+            let imageUrl = formData.get('image')?.trim() || ''; // 空文字列をトリム
 
             // Handle Image Upload
             const fileInput = document.getElementById('image-file-input');
@@ -373,6 +373,11 @@
                     imageUrl = await getDownloadURL(snapshot.ref);
                     console.log("✅ ダウンロードURL取得完了:", imageUrl);
                     
+                    // URLが正しく取得できたか確認
+                    if (!imageUrl || imageUrl.trim() === '') {
+                        throw new Error("ダウンロードURLの取得に失敗しました");
+                    }
+                    
                 } catch (error) {
                     console.error("❌ 画像アップロードエラー:", error);
                     console.error("エラー詳細:", {
@@ -395,7 +400,7 @@
                     btn.innerText = '登録する';
                     return;
                 }
-            } else if (!imageUrl) {
+            } else if (!imageUrl || imageUrl.trim() === '') {
                 alert("画像を選択するかURLを入力してください");
                 btn.disabled = false;
                 btn.innerText = '登録する';
@@ -413,12 +418,20 @@
                 if (keyMatch) publishableKey = keyMatch[1];
             }
 
+            // 最終的なimageUrlの検証
+            if (!imageUrl || imageUrl.trim() === '') {
+                alert("画像URLが設定されていません。画像を選択するかURLを入力してください。");
+                btn.disabled = false;
+                btn.innerText = '登録する';
+                return;
+            }
+
             const productData = {
                 id: formData.get('id'),
                 title: formData.get('title'),
                 price: formData.get('price'),
                 badge: formData.get('badge') || null,
-                image: imageUrl,
+                image: imageUrl.trim(), // トリムして保存
                 desc: formData.get('desc'),
                 specs: {
                     size: formData.get('spec_size'),
@@ -431,11 +444,16 @@
             };
 
             try {
-                console.log("💾 Firestoreに商品データを保存中...", productData);
+                console.log("💾 Firestoreに商品データを保存中...", {
+                    ...productData,
+                    image: imageUrl.substring(0, 50) + '...' // ログには最初の50文字のみ表示
+                });
+                console.log("📸 画像URL（完全版）:", imageUrl);
                 btn.innerText = 'データ保存中...';
                 
                 const docRef = await addDoc(getCollectionRef(), productData);
                 console.log("✅ 商品データの保存が完了しました。ID:", docRef.id);
+                console.log("✅ 保存された画像URL:", imageUrl);
                 
                 btn.innerText = '登録完了！';
                 document.getElementById('status-msg').classList.remove('hidden');
