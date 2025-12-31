@@ -97,7 +97,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Form -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                        <form id="product-form" class="space-y-5" onsubmit="return false;">
+                        <form id="product-form" class="space-y-5">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-slate-700 mb-1">商品ID (Slug)</label>
@@ -152,7 +152,7 @@
                             </div>
                             <div class="pt-4 flex items-center justify-between">
                                 <span id="status-msg" class="text-sm font-medium hidden"></span>
-                                <button type="submit" id="submit-btn" class="bg-slate-900 py-3 px-8 text-sm font-medium text-white rounded-md hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed">登録する</button>
+                                <button type="button" id="submit-btn" class="bg-slate-900 py-3 px-8 text-sm font-medium text-white rounded-md hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed" onclick="console.log('ボタンがクリックされました'); addProduct(event);">登録する</button>
                             </div>
                         </form>
                     </div>
@@ -333,7 +333,7 @@
         });
 
         const addProduct = async (e) => {
-            console.log("🚀 addProduct関数が呼ばれました");
+            console.log("🚀 addProduct関数が呼ばれました", e);
             
             // デフォルト動作を防止（ページリロードを防ぐ）
             if (e && e.preventDefault) {
@@ -342,6 +342,13 @@
             } else {
                 console.warn("⚠️ イベントオブジェクトが見つかりません");
             }
+            
+            // ボタンの状態をログ出力
+            const btn = document.getElementById('submit-btn');
+            console.log("ボタンの状態:", {
+                disabled: btn?.disabled,
+                innerText: btn?.innerText
+            });
             
             // 認証状態を確認（最大5秒待機）
             console.log("🔐 認証状態を確認中...");
@@ -360,10 +367,23 @@
             console.log("✅ 認証確認完了。商品登録を開始します。", currentUser.uid);
             
             const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.innerText = '保存中...';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = '保存中...';
+                console.log("✅ ボタンを無効化しました");
+            } else {
+                console.error("❌ submit-btnが見つかりません");
+            }
 
-            const formData = new FormData(e.target);
+            // フォームデータを取得
+            const form = document.getElementById('product-form');
+            if (!form) {
+                console.error("❌ product-formが見つかりません");
+                return false;
+            }
+            
+            const formData = new FormData(form);
+            console.log("📋 フォームデータを取得しました:", Object.fromEntries(formData));
             const stripeCode = formData.get('stripe_code');
             let imageUrl = formData.get('image')?.trim() || ''; // 空文字列をトリム
 
@@ -604,19 +624,47 @@
             }
         }
         
-        // DOMが完全に読み込まれてからイベントリスナーを登録
-        document.addEventListener('DOMContentLoaded', () => {
+        // フォームイベントリスナーを登録（即座に実行）
+        function setupFormListener() {
             const form = document.getElementById('product-form');
-            if (form) {
-                console.log("✅ フォームが見つかりました。イベントリスナーを登録します。");
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (form && submitBtn) {
+                console.log("✅ フォームとボタンが見つかりました。イベントリスナーを登録します。");
+                
+                // フォーム送信イベント
                 form.addEventListener('submit', (e) => {
                     console.log("📝 フォーム送信イベントが発火しました");
+                    e.preventDefault();
                     addProduct(e);
                 });
+                
+                // ボタンクリックイベント（バックアップ）
+                submitBtn.addEventListener('click', (e) => {
+                    console.log("🖱️ ボタンクリックイベントが発火しました");
+                    e.preventDefault();
+                    addProduct(e);
+                });
+                
+                return true;
             } else {
-                console.error("❌ product-formが見つかりません");
+                console.error("❌ フォームまたはボタンが見つかりません", {
+                    form: !!form,
+                    submitBtn: !!submitBtn
+                });
+                return false;
             }
-        });
+        }
+        
+        // DOMが読み込まれたら実行
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupFormListener);
+        } else {
+            setupFormListener();
+        }
+        
+        // 念のため、少し遅れて再実行
+        setTimeout(setupFormListener, 1000);
     </script>
 
     <script>
