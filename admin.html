@@ -97,7 +97,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Form -->
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                        <form id="product-form" class="space-y-5">
+                        <form id="product-form" class="space-y-5" onsubmit="return false;">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-slate-700 mb-1">商品ID (Slug)</label>
@@ -333,9 +333,18 @@
         });
 
         const addProduct = async (e) => {
-            e.preventDefault();
+            console.log("🚀 addProduct関数が呼ばれました");
+            
+            // デフォルト動作を防止（ページリロードを防ぐ）
+            if (e && e.preventDefault) {
+                e.preventDefault();
+                console.log("✅ e.preventDefault()を実行しました");
+            } else {
+                console.warn("⚠️ イベントオブジェクトが見つかりません");
+            }
             
             // 認証状態を確認（最大5秒待機）
+            console.log("🔐 認証状態を確認中...");
             let waitCount = 0;
             while (!currentUser && waitCount < 50) {
                 await new Promise(r => setTimeout(r, 100));
@@ -344,11 +353,11 @@
             
             if (!currentUser) {
                 alert("認証エラー: ログインしていません。ページを再読み込みしてください。");
-                console.error("認証エラー: currentUser is null");
-                return;
+                console.error("❌ 認証エラー: currentUser is null");
+                return false; // falseを返してフォーム送信を防ぐ
             }
             
-            console.log("✅ 認証確認完了。商品登録を開始します。");
+            console.log("✅ 認証確認完了。商品登録を開始します。", currentUser.uid);
             
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;
@@ -369,7 +378,7 @@
                     alert("画像ファイルが大きすぎます。10MB以下のファイルを選択してください。");
                     btn.disabled = false;
                     btn.innerText = '登録する';
-                    return;
+                    return false;
                 }
                 
                 const storageRef = ref(storage, 'products/' + new Date().getTime() + '_' + file.name);
@@ -418,13 +427,13 @@
                     alert(errorMessage);
                     btn.disabled = false;
                     btn.innerText = '登録する';
-                    return;
+                    return false;
                 }
             } else if (!imageUrl || imageUrl.trim() === '') {
                 alert("画像を選択するかURLを入力してください");
                 btn.disabled = false;
                 btn.innerText = '登録する';
-                return;
+                return false;
             }
 
             let buyButtonId = '';
@@ -443,7 +452,7 @@
                 alert("画像URLが設定されていません。画像を選択するかURLを入力してください。");
                 btn.disabled = false;
                 btn.innerText = '登録する';
-                return;
+                return false;
             }
 
             const productData = {
@@ -539,6 +548,8 @@
                     statusMsg.classList.add('hidden');
                 }, 5000);
             }
+            
+            return false; // フォーム送信を防ぐ
         };
 
         window.fetchProducts = async () => {
@@ -593,10 +604,19 @@
             }
         }
         
-        const form = document.getElementById('product-form');
-        if (form) {
-            form.addEventListener('submit', addProduct);
-        }
+        // DOMが完全に読み込まれてからイベントリスナーを登録
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('product-form');
+            if (form) {
+                console.log("✅ フォームが見つかりました。イベントリスナーを登録します。");
+                form.addEventListener('submit', (e) => {
+                    console.log("📝 フォーム送信イベントが発火しました");
+                    addProduct(e);
+                });
+            } else {
+                console.error("❌ product-formが見つかりません");
+            }
+        });
     </script>
 
     <script>
