@@ -151,8 +151,8 @@
                                 <p class="text-xs text-slate-500 mt-1">Stripeダッシュボードから取得した「利用ボタン」のコードを貼り付けてください。</p>
                             </div>
                             <div class="pt-4 flex items-center justify-between">
-                                <span id="status-msg" class="text-sm font-medium text-emerald-600 hidden"><i class="fa-solid fa-check"></i> 保存しました</span>
-                                <button type="submit" id="submit-btn" class="bg-slate-900 py-3 px-8 text-sm font-medium text-white rounded-md hover:bg-slate-800 transition">登録する</button>
+                                <span id="status-msg" class="text-sm font-medium hidden"></span>
+                                <button type="submit" id="submit-btn" class="bg-slate-900 py-3 px-8 text-sm font-medium text-white rounded-md hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed">登録する</button>
                             </div>
                         </form>
                     </div>
@@ -279,7 +279,7 @@
             if (!auth) {
                 console.error("❌ Firebase Authが初期化されていません");
                 alert("Firebase Auth初期化エラー: Authが利用できません");
-                return;
+                throw new Error("Firebase Authが初期化されていません");
             }
 
             try {
@@ -311,6 +311,7 @@
                 if (typeof __firebase_config === 'undefined') {
                     alert(errorMessage);
                 }
+                throw e; // エラーを再スロー
             }
         }
         
@@ -318,17 +319,36 @@
             if (user) {
                 currentUser = user;
                 console.log("Admin Logged in as:", user.uid);
+            } else {
+                currentUser = null;
+                console.log("Admin logged out");
             }
         });
 
-        initAuth();
+        // 認証を初期化（非同期で完了を待つ）
+        initAuth().then(() => {
+            console.log("✅ 認証初期化完了");
+        }).catch((error) => {
+            console.error("❌ 認証初期化エラー:", error);
+        });
 
         const addProduct = async (e) => {
             e.preventDefault();
-            if (!currentUser) {
-                await new Promise(r => setTimeout(r, 1000));
-                if (!currentUser) return alert("認証エラー: ログインしていません。ページを再読み込みしてください。");
+            
+            // 認証状態を確認（最大5秒待機）
+            let waitCount = 0;
+            while (!currentUser && waitCount < 50) {
+                await new Promise(r => setTimeout(r, 100));
+                waitCount++;
             }
+            
+            if (!currentUser) {
+                alert("認証エラー: ログインしていません。ページを再読み込みしてください。");
+                console.error("認証エラー: currentUser is null");
+                return;
+            }
+            
+            console.log("✅ 認証確認完了。商品登録を開始します。");
             
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;
@@ -455,8 +475,14 @@
                 console.log("✅ 商品データの保存が完了しました。ID:", docRef.id);
                 console.log("✅ 保存された画像URL:", imageUrl);
                 
+                // 成功メッセージを表示
+                const statusMsg = document.getElementById('status-msg');
+                statusMsg.innerHTML = '<i class="fa-solid fa-check"></i> 登録が完了しました';
+                statusMsg.classList.remove('hidden');
+                statusMsg.classList.add('text-emerald-600');
+                
                 btn.innerText = '登録完了！';
-                document.getElementById('status-msg').classList.remove('hidden');
+                btn.disabled = false;
                 
                 // フォームをリセット
                 e.target.reset();
@@ -468,12 +494,18 @@
                     fileInput.value = '';
                 }
                 
+                // 商品一覧を更新
                 setTimeout(() => {
-                    document.getElementById('status-msg').classList.add('hidden');
                     switchTab('list');
-                    btn.disabled = false;
+                    // 商品一覧を再読み込み
+                    fetchProducts();
+                }, 2000);
+                
+                // メッセージを3秒後に非表示
+                setTimeout(() => {
+                    statusMsg.classList.add('hidden');
                     btn.innerText = '登録する';
-                }, 1500);
+                }, 3000);
             } catch (error) {
                 console.error("❌ Firestore保存エラー:", error);
                 console.error("エラー詳細:", {
@@ -485,13 +517,27 @@
                 let errorMessage = "データ保存エラー: " + error.message;
                 if (error.code === 'permission-denied') {
                     errorMessage += "\n\nFirestoreの権限設定を確認してください。";
+                    errorMessage += "\nFirestore Console > Rules で書き込み権限を確認してください。";
                 } else if (error.code === 'unavailable') {
                     errorMessage += "\n\nネットワーク接続を確認してください。";
+                } else if (error.code === 'failed-precondition') {
+                    errorMessage += "\n\nFirestoreのインデックスが不足している可能性があります。";
                 }
+                
+                // エラーメッセージを表示（アラートではなく、画面上に表示）
+                const statusMsg = document.getElementById('status-msg');
+                statusMsg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> エラー: ' + error.message;
+                statusMsg.classList.remove('hidden', 'text-emerald-600');
+                statusMsg.classList.add('text-red-600');
                 
                 alert(errorMessage);
                 btn.disabled = false;
                 btn.innerText = '登録する';
+                
+                // エラーメッセージを5秒後に非表示
+                setTimeout(() => {
+                    statusMsg.classList.add('hidden');
+                }, 5000);
             }
         };
 
@@ -499,7 +545,17 @@
             const tbody = document.getElementById('product-table-body');
             tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4">読み込み中...</td></tr>';
             
-            if (!currentUser) await new Promise(r => setTimeout(r, 1000));
+            // 認証状態を確認（最大5秒待機）
+            let waitCount = 0;
+            while (!currentUser && waitCount < 50) {
+                await new Promise(r => setTimeout(r, 100));
+                waitCount++;
+            }
+            
+            if (!currentUser) {
+                tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">認証エラー: ログインしていません</td></tr>';
+                return;
+            }
 
             try {
                 const q = query(getCollectionRef(), orderBy('createdAt', 'desc'));
