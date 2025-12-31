@@ -336,6 +336,9 @@
         window.addProduct = async (e) => {
             console.log("🚀 addProduct関数が呼ばれました", e);
             
+            // ボタンを取得（関数の先頭で一度だけ）
+            const btn = document.getElementById('submit-btn');
+            
             // デフォルト動作を防止（ページリロードを防ぐ）
             if (e && e.preventDefault) {
                 e.preventDefault();
@@ -343,13 +346,6 @@
             } else {
                 console.warn("⚠️ イベントオブジェクトが見つかりません");
             }
-            
-            // ボタンの状態をログ出力
-            const btn = document.getElementById('submit-btn');
-            console.log("ボタンの状態:", {
-                disabled: btn?.disabled,
-                innerText: btn?.innerText
-            });
             
             // 認証状態を確認（最大5秒待機）
             console.log("🔐 認証状態を確認中...");
@@ -366,8 +362,6 @@
             }
             
             console.log("✅ 認証確認完了。商品登録を開始します。", currentUser.uid);
-            
-            const btn = document.getElementById('submit-btn');
             if (btn) {
                 btn.disabled = true;
                 btn.innerText = '保存中...';
