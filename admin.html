@@ -152,7 +152,7 @@
                             </div>
                             <div class="pt-4 flex items-center justify-between">
                                 <span id="status-msg" class="text-sm font-medium hidden"></span>
-                                <button type="button" id="submit-btn" class="bg-slate-900 py-3 px-8 text-sm font-medium text-white rounded-md hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed" onclick="console.log('ボタンがクリックされました'); addProduct(event);">登録する</button>
+                                <button type="button" id="submit-btn" class="bg-slate-900 py-3 px-8 text-sm font-medium text-white rounded-md hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed">登録する</button>
                             </div>
                         </form>
                     </div>
@@ -332,7 +332,8 @@
             console.error("❌ 認証初期化エラー:", error);
         });
 
-        const addProduct = async (e) => {
+        // addProduct関数をグローバルスコープに公開
+        window.addProduct = async (e) => {
             console.log("🚀 addProduct関数が呼ばれました", e);
             
             // デフォルト動作を防止（ページリロードを防ぐ）
@@ -636,14 +637,24 @@
                 form.addEventListener('submit', (e) => {
                     console.log("📝 フォーム送信イベントが発火しました");
                     e.preventDefault();
-                    addProduct(e);
+                    e.stopPropagation();
+                    if (window.addProduct) {
+                        window.addProduct(e);
+                    } else {
+                        console.error("❌ window.addProductが見つかりません");
+                    }
                 });
                 
-                // ボタンクリックイベント（バックアップ）
+                // ボタンクリックイベント（メイン）
                 submitBtn.addEventListener('click', (e) => {
                     console.log("🖱️ ボタンクリックイベントが発火しました");
                     e.preventDefault();
-                    addProduct(e);
+                    e.stopPropagation();
+                    if (window.addProduct) {
+                        window.addProduct(e);
+                    } else {
+                        console.error("❌ window.addProductが見つかりません");
+                    }
                 });
                 
                 return true;
@@ -656,15 +667,33 @@
             }
         }
         
+        // モジュール読み込み後にイベントリスナーを登録
+        // window.addProductが定義されるまで待機
+        function waitForAddProduct() {
+            if (window.addProduct) {
+                console.log("✅ window.addProductが見つかりました。イベントリスナーを登録します。");
+                setupFormListener();
+            } else {
+                console.log("⏳ window.addProductを待機中...");
+                setTimeout(waitForAddProduct, 100);
+            }
+        }
+        
         // DOMが読み込まれたら実行
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setupFormListener);
+            document.addEventListener('DOMContentLoaded', () => {
+                waitForAddProduct();
+            });
         } else {
-            setupFormListener();
+            waitForAddProduct();
         }
         
         // 念のため、少し遅れて再実行
-        setTimeout(setupFormListener, 1000);
+        setTimeout(() => {
+            if (window.addProduct) {
+                setupFormListener();
+            }
+        }, 2000);
     </script>
 
     <script>
